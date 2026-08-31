@@ -42,7 +42,7 @@ export const FunnyMemorySection: React.FC = () => {
       {/* Blurred, dim backdrop — sets a "tabletop" mood so the polaroid in front reads as the sharp, vivid memory */}
       <img
         src={FUNNY_MEMORY_IMG}
-        alt="Alyorbek va Madinaxonning kulgili xotirasi"
+        alt="Sevgiling va Sevgilimning kulgili xotirasi"
         style={{
           position: 'absolute', inset: 0,
           width: '100%', height: '100%',
@@ -100,7 +100,7 @@ export const FunnyMemorySection: React.FC = () => {
           <div style={{ width: '100%', aspectRatio: '1 / 1', overflow: 'hidden', borderRadius: '2px' }}>
             <img
               src={FUNNY_MEMORY_IMG}
-              alt="Alyorbek va Madinaxonning kulgili xotirasi"
+              alt="Sevgiling va Sevgilimning kulgili xotirasi"
               style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'saturate(1.05) contrast(1.05)' }}
             />
           </div>

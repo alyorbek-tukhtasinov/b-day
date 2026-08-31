@@ -60,7 +60,7 @@ export const CoverSection: React.FC = () => {
       {/* Background photo */}
       <img
         src={COVER_IMG}
-        alt="Alyorbek va Madinaxonning birgalikdagi surati"
+        alt="Sevgiling va Sevgilimning birgalikdagi surati"
         style={{
           position: 'absolute', inset: 0,
           width: '100%', height: '100%',
@@ -128,7 +128,7 @@ export const CoverSection: React.FC = () => {
           color: '#C9A96E', letterSpacing: '0.25em',
           textTransform: 'uppercase', margin: 0,
         }}>
-          ♡ 12 IYUL ♡
+          ♡ 29 FEVRAL ♡
         </motion.p>
 
         <motion.h1 {...fadeUp(0.15)} style={{
@@ -138,7 +138,7 @@ export const CoverSection: React.FC = () => {
           color: '#F8F0E3', margin: 0, lineHeight: 1.1,
           textShadow: '0 0 60px rgba(201,169,110,0.3), 0 0 120px rgba(201,169,110,0.15)',
         }}>
-          Madinaxon
+          Sevgilim
         </motion.h1>
 
         <motion.div {...fadeUp(0.3)} style={{
@@ -153,7 +153,7 @@ export const CoverSection: React.FC = () => {
             fontSize: '11px', fontWeight: 500,
             letterSpacing: '0.15em', textTransform: 'uppercase',
             color: '#C9A96E',
-          }}>22 BAHORNI QARSHI OLGAN FARISHTAM</span>
+          }}>18 BAHORNI QARSHI OLGAN FARISHTAM</span>
         </motion.div>
 
         {/* Divider */}
@@ -180,7 +180,7 @@ export const CoverSection: React.FC = () => {
           margin: '8px 0 0',
           textShadow: '0 0 20px rgba(201,169,110,0.4)',
         }}>
-          Har bir soniya seni o‘ylaguvchi — Alyorbekdan
+          Har bir soniya seni o‘ylaguvchi — Sevgilingdan
         </motion.p>
       </div>
 

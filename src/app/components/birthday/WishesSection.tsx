@@ -8,7 +8,7 @@ const WISHES = [
   'Yuragingdagi eng ezgu va shirin orzularing hammasi ushalsin',
   "Sog‘liging mustahkam, qalbing hamisha bahor kabi sokin va obod bo‘lsin",
   "Men yoningda bo'lmasam ham, sevgim doim seni o'rab tursin",
-  'Ushbu yil sening eng porloq, eng baxtli va eng unutilmas yiling bo‘lsin, mening Madinam',
+  'Ushbu yil sening eng porloq, eng baxtli va eng unutilmas yiling bo‘lsin, mening Sevgilim',
 ];
 
 const PulsingHeart: React.FC<{ delay?: number }> = ({ delay = 0 }) => (
@@ -48,7 +48,7 @@ export const WishesSection: React.FC = () => {
     >
       <img
         src={WISHES_IMG}
-        alt="Alyorbek va Madinaxonning baxtli surati"
+        alt="Sevgiling va Sevgilimning baxtli surati"
         style={{
           position: 'absolute', inset: 0,
           width: '100%', height: '100%',

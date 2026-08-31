@@ -40,7 +40,7 @@ export const GratitudeSection: React.FC = () => {
     >
       <img
         src={GRATITUDE_IMG}
-        alt="Alyorbek va Madinaxonning quchoqlashgan surati"
+        alt="Sevgiling va Sevgilimning quchoqlashgan surati"
         style={{
           position: 'absolute', inset: 0,
           width: '100%', height: '100%',

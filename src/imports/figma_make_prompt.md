@@ -1,4 +1,4 @@
-# FULL BUILD SPECIFICATION — Transform this Wedding Invitation codebase into "Madinaxon's 22nd Birthday" website
+# FULL BUILD SPECIFICATION — Transform this Wedding Invitation codebase into "Sevgilim's 22nd Birthday" website
 
 ## 0. Context (read before touching any code)
 
@@ -6,7 +6,7 @@ The attached codebase is a working React 18 + TypeScript + Vite 6 + Tailwind v4 
 
 Your job is NOT to build a new app from scratch. Your job is to **repurpose this exact codebase** into a romantic birthday website with a completely different structure and content, while preserving the parts of the design system that already work well.
 
-**Who this is for:** A man named **Alyorbek** is building this website for his girlfriend, **Madinaxon**, for her birthday. Her birthday is **12-July**, she was born in **2004**, so she is turning **22 years old**. They are currently in a long-distance relationship (physically far apart), which is why this is a website instead of a physical gift, and why the final section ends with a digital monetary gift instead of a physical one.
+**Who this is for:** A man named **Sevgiling** is building this website for his girlfriend, **Sevgilim**, for her birthday. Her birthday is **12-July**, she was born in **2004**, so she is turning **22 years old**. They are currently in a long-distance relationship (physically far apart), which is why this is a website instead of a physical gift, and why the final section ends with a digital monetary gift instead of a physical one.
 
 **Concept name: "Sevgi kundaligi" (Love Diary).** The site reads like flipping through a personal diary/scrapbook of the couple's relationship, each page/section is one diary entry, anchored by a real photo of the two of them together.
 
@@ -92,7 +92,7 @@ Create a new folder `src/app/components/birthday/` containing exactly these 8 fi
 
 ### 3.1 `index.html`
 - Change `<html lang="en">` to `<html lang="uz">`.
-- Change `<title>Interactive Wedding Invitation Design</title>` to `<title>Madinaxonga — Sevgi Kundaligi 🎂</title>`.
+- Change `<title>Interactive Wedding Invitation Design</title>` to `<title>Sevgilimga — Sevgi Kundaligi 🎂</title>`.
 
 ### 3.2 `src/app/App.tsx` — replace entirely with:
 
@@ -216,7 +216,7 @@ General rule for every section below: same outer `<section>` wrapper as the curr
 
 | # | File | Photo needed | Uzbek headline |
 |---|---|---|---|
-| 1 | CoverSection.tsx | Best couple photo | Madinaxon |
+| 1 | CoverSection.tsx | Best couple photo | Sevgilim |
 | 2 | FirstMemorySection.tsx | Early-relationship photo | Bizning boshlanishimiz |
 | 3 | FunnyMemorySection.tsx | A candid/funny photo | Eng kulgili lahzamiz |
 | 4 | GratitudeSection.tsx | A tender/close photo | Rahmat, doim yonimda bo'lganing uchun |
@@ -234,8 +234,8 @@ All seven photos must be **different photographs of the couple together** — th
 - Keep the two soft radial "glowing orb" background accents from the old Hero, unchanged.
 - Background image constant: `const COVER_IMG = '/photos/01-cover.jpg';` (see Section 6 for the image-sourcing rule).
 - Content, top to bottom:
-  1. Small kicker line, exact style of the old `heroDate` label (Montserrat, 10px, 300 weight, `#C9A96E`, uppercase, letter-spacing 0.25em): **`♡ 12 IYUL ♡`**
-  2. Main name, exact style of the old bride/groom `h1` (Cormorant Garamond, `clamp(52px,16vw,72px)`, weight 300, italic, `#F8F0E3`, text-shadow glow): **`Madinaxon`**
+  1. Small kicker line, exact style of the old `heroDate` label (Montserrat, 10px, 300 weight, `#C9A96E`, uppercase, letter-spacing 0.25em): **`♡ 29 FEVRAL ♡`**
+  2. Main name, exact style of the old bride/groom `h1` (Cormorant Garamond, `clamp(52px,16vw,72px)`, weight 300, italic, `#F8F0E3`, text-shadow glow): **`Sevgilim`**
   3. A new small pill-shaped age badge directly under the name (this is new, not in the old code — build it in this exact style):
      ```
      display:inline-flex; align-items:center; padding:6px 18px; borderRadius:999px;
@@ -246,9 +246,9 @@ All seven photos must be **different photographs of the couple together** — th
      Text inside the badge: **`22 YOSH`**
   4. Divider (reuse the old thin gradient-line divider, unchanged).
   5. Subtitle, exact style of the old `heroSubtitle` (Cormorant Garamond italic, `clamp(16px,5vw,20px)`, `rgba(245,240,227,0.85)`): **`Tug'ilgan kuning muborak bo'lsin, sevgilim`**
-  6. Small signature line near the very bottom, Dancing Script cursive, gold, same glow treatment the old ampersand `&` had: **`Alyorbekdan — sevgi bilan`**
+  6. Small signature line near the very bottom, Dancing Script cursive, gold, same glow treatment the old ampersand `&` had: **`Sevgilingdan — sevgi bilan`**
 - Scroll-hint at the bottom, same bouncing chevron + label as before: **`Pastga suring`**
-- Image `alt` text: `"Alyorbek va Madinaxonning birgalikdagi surati"`
+- Image `alt` text: `"Sevgiling va Sevgilimning birgalikdagi surati"`
 
 ---
 
@@ -258,10 +258,10 @@ All seven photos must be **different photographs of the couple together** — th
 - Background constant: `const FIRST_MEMORY_IMG = '/photos/02-first-memory.jpg';`
 - Top ornament glyphs: `✦` (unchanged style).
 - Title: **`Bizning boshlanishimiz`**
-- Body paragraph (editable placeholder — Alyorbek should personalize this later with the real story of how they met, but ship it with this warm default so the page is not empty):
+- Body paragraph (editable placeholder — Sevgiling should personalize this later with the real story of how they met, but ship it with this warm default so the page is not empty):
   **`Hali ham o'sha kunni eslayman. Sen kulganingda, vaqt bir zumga to'xtab qolgandek bo'lgan edi. O'shanda bilmagandim — bu oddiy tanishuv butun hayotimni boshqa tomonga burib yuborishini.`**
 - Closing signature (Dancing Script): **`Va o'shandan beri...`**
-- Image `alt`: `"Alyorbek va Madinaxonning birinchi kunlaridan xotira"`
+- Image `alt`: `"Sevgiling va Sevgilimning birinchi kunlaridan xotira"`
 
 ---
 
@@ -274,7 +274,7 @@ All seven photos must be **different photographs of the couple together** — th
 - Body paragraph (editable placeholder):
   **`Kulganingda burningni jiyirganingni bilasanmi? Men buni ham juda yaxshi ko'raman. O'sha kuni ikkalamiz shunchalik kulganmizki, atrofdagilar bizga g'alati qarashgan — lekin bizga baribir edi.`**
 - Closing signature: **`Sen bilan har lahza — bayram`**
-- Image `alt`: `"Alyorbek va Madinaxonning kulgili xotirasi"`
+- Image `alt`: `"Sevgiling va Sevgilimning kulgili xotirasi"`
 
 ---
 
@@ -287,7 +287,7 @@ All seven photos must be **different photographs of the couple together** — th
 - Body paragraph (editable placeholder):
   **`Masofa bizni ajratsa ham, sen har doim yuragimning eng yaqin nuqtasidasan. Qiyin kunlarimda ovozing kuch bergan, uzoqdan turib ham meni tinchlantira olgan yagona insonsan.`**
 - Closing signature: **`Doim yoningdaman — uzoqda bo'lsam ham`**
-- Image `alt`: `"Alyorbek va Madinaxonning quchoqlashgan surati"`
+- Image `alt`: `"Sevgiling va Sevgilimning quchoqlashgan surati"`
 
 ---
 
@@ -308,7 +308,7 @@ This is the creative replacement for the removed timer/venue-map pages. It is a 
   3. `03` — **Birinchi "Seni sevaman"** — *Yuragim birinchi marta baralla gapirgan kun*
   4. `04` — **Masofaga qarshi** — *Uzoqlik bizni emas, sevgimizni sinovdan o'tkazdi*
   5. `05` — **Bugun** — *22 yosh, va sevgimiz hali ham kuchayib bormoqda*
-- Image `alt`: `"Alyorbek va Madinaxonning sayohatdan surati"`
+- Image `alt`: `"Sevgiling va Sevgilimning sayohatdan surati"`
 - **Do not** add a live clock, a "days until" counter, or any embedded map/iframe anywhere in this section.
 
 ---
@@ -322,14 +322,14 @@ This is the creative replacement for the removed timer/venue-map pages. It is a 
   2. Orzularing hammasi ushalsin
   3. Sog'liging mustahkam, ko'ngling doim tinch bo'lsin
   4. Men yoningda bo'lmasam ham, sevgim doim seni o'rab tursin
-  5. Bu yil senga eng baxtli yil bo'lsin, Madinaxon
-- Image `alt`: `"Alyorbek va Madinaxonning baxtli surati"`
+  5. Bu yil senga eng baxtli yil bo'lsin, Sevgilim
+- Image `alt`: `"Sevgiling va Sevgilimning baxtli surati"`
 
 ---
 
 ### 4.7 `GiftSection.tsx` (Section 7) — rebuilt gift-reveal + Payme/Click link-out
 
-**Do not reuse the old bank-card-with-copy-button UI.** That old design was for wedding guests to send money *to* the couple. Here the direction is reversed — Alyorbek is sending a gift *to* Madinaxon — and no real payment can be processed inside the website itself (that requires a licensed payment processor, which this static site does not have). Instead, build a two-state reveal experience: a closed state with an "open" button, and a revealed state with outbound link button(s) to Alyorbek's own Payme/Click payment link. Use the confetti burst as the celebratory moment instead of displaying any card number or amount — **never hardcode or display a specific money amount anywhere in this section.**
+**Do not reuse the old bank-card-with-copy-button UI.** That old design was for wedding guests to send money *to* the couple. Here the direction is reversed — Sevgiling is sending a gift *to* Sevgilim — and no real payment can be processed inside the website itself (that requires a licensed payment processor, which this static site does not have). Instead, build a two-state reveal experience: a closed state with an "open" button, and a revealed state with outbound link button(s) to Sevgiling's own Payme/Click payment link. Use the confetti burst as the celebratory moment instead of displaying any card number or amount — **never hardcode or display a specific money amount anywhere in this section.**
 
 ```tsx
 import React, { useRef, useState } from 'react';
@@ -338,9 +338,9 @@ import confetti from 'canvas-confetti';
 
 const GIFT_IMG = '/photos/07-gift.jpg';
 
-// TODO(Alyorbek): create a personal payment link in the Payme app and paste it here before publishing.
+// TODO(Sevgiling): create a personal payment link in the Payme app and paste it here before publishing.
 const PAYMENT_LINK_PAYME = '';
-// TODO(Alyorbek): optional — paste a Click payment link here. Leave empty to hide this button entirely.
+// TODO(Sevgiling): optional — paste a Click payment link here. Leave empty to hide this button entirely.
 const PAYMENT_LINK_CLICK = '';
 
 export const GiftSection: React.FC = () => {
@@ -378,16 +378,16 @@ export const GiftSection: React.FC = () => {
   //   Fallback microcopy (always shown, small, ~60% opacity):
   //     "Havola ochilmasa, menga yozib qo'y — qo'lda yuboraman 💛"
   //   Final signature line (Dancing Script, gold):
-  //     "Seni sevaman. — Alyorbek"
+  //     "Seni sevaman. — Sevgiling"
 };
 ```
 
 Implementation requirements for this section specifically:
-- Both `<a>` buttons must open in a new tab (`target="_blank" rel="noopener noreferrer"`) — this website never processes the transfer itself, it only opens Alyorbek's real Payme/Click link.
+- Both `<a>` buttons must open in a new tab (`target="_blank" rel="noopener noreferrer"`) — this website never processes the transfer itself, it only opens Sevgiling's real Payme/Click link.
 - The Click button must only render when `PAYMENT_LINK_CLICK` is a non-empty string — do not force both buttons to always show.
 - Style both link-buttons identically to the old `GiftSection`'s copy-button (rounded 16px, `rgba(201,169,110,0.1)` background, `1px solid rgba(201,169,110,0.3)` border, gold text, Montserrat 13px, letter-spacing 0.08em) rather than inventing a new button style.
 - The confetti call must fire exactly once per tap of "Ochish" (not repeatedly, not on scroll-into-view).
-- Image `alt`: `"Alyorbekdan Madinaxonga sovg'a"`.
+- Image `alt`: `"Sevgilingdan Sevgilimga sovg'a"`.
 
 ---
 
@@ -395,13 +395,13 @@ Implementation requirements for this section specifically:
 
 Keep the entire mechanic identical to the old `MusicPlayer.tsx` (autoplay attempt after 800ms, fallback hint toast if the browser blocks autoplay, floating circular toggle button bottom-right, animated equalizer bars while playing). The only changes:
 - Remove the `useLanguage` import and the `t.musicTap` lookup; hardcode the hint text directly: **`♪ Musiqani yoqish uchun bosing`**.
-- Leave `MUSIC_URL = '/music.mp3'` as-is — Alyorbek will replace the actual mp3 file with a song meaningful to the two of them.
+- Leave `MUSIC_URL = '/music.mp3'` as-is — Sevgiling will replace the actual mp3 file with a song meaningful to the two of them.
 
 ---
 
 ## 6. Photo-sourcing rule (apply to all 7 `*_IMG` constants above)
 
-- **If real photos of Alyorbek and Madinaxon are attached directly in this Figma Make session**, import and use them via the existing `figma:asset/` mechanism (already wired up in `vite.config.ts`) in the order listed in the table in Section 4, one distinct photo per section, instead of the placeholder path constants shown above.
+- **If real photos of Sevgiling and Sevgilim are attached directly in this Figma Make session**, import and use them via the existing `figma:asset/` mechanism (already wired up in `vite.config.ts`) in the order listed in the table in Section 4, one distinct photo per section, instead of the placeholder path constants shown above.
 - **If no real photos are attached yet**, use tasteful, safe-for-work, non-branded romantic placeholder photography (in the same style already used by the old `InvitationSection.tsx`/`DetailsSection.tsx` — i.e., Unsplash source URLs), applying a similar desaturate/darken filter (`saturate(0.6) brightness(0.3)` or similar) so it still reads as intentional and polished. Keep each of the 7 `const *_IMG = '...'` constants at the very top of its file, clearly isolated, so swapping in real photos later is a one-line change per file.
 - Every `<img>` needs `width:100%; height:100%; objectFit:cover;` and a real, specific Uzbek `alt` description (never leave `alt=""`).
 
@@ -412,7 +412,7 @@ Keep the entire mechanic identical to the old `MusicPlayer.tsx` (autoplay attemp
 - Do not keep any language switcher/toggle, in the corner or anywhere else.
 - Do not keep the Countdown or Map concept in any form (no timers, no embedded maps/iframes, no venue address cards).
 - Do not display a specific gift amount or currency figure anywhere.
-- Do not attempt to process a real payment/transfer inside the website — only a styled outbound link to Alyorbek's own Payme/Click payment link.
+- Do not attempt to process a real payment/transfer inside the website — only a styled outbound link to Sevgiling's own Payme/Click payment link.
 - Do not change the fonts, the gold accent color, or the mobile-frame/scroll-snap mechanism.
 - Do not modify `vite.config.ts`, `package.json`, `src/styles/*`, `src/main.tsx`, or anything under `components/ui/` or `components/figma/`.
 - Do not leave any leftover `t.xxx`, `useLanguage`, or `LanguageContext` references anywhere in the project.

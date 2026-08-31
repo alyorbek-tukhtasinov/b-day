@@ -4,9 +4,9 @@ import confetti from 'canvas-confetti';
 
 const GIFT_IMG = '/rasmlar/7.jpg';
 
-// TODO(Alyorbek): create a personal payment link in the Payme app and paste it here before publishing.
+// TODO(Sevgiling): create a personal payment link in the Payme app and paste it here before publishing.
 const PAYMENT_LINK_PAYME = '';
-// TODO(Alyorbek): optional — paste a Click payment link here. Leave empty to hide this button entirely.
+// TODO(Sevgiling): optional — paste a Click payment link here. Leave empty to hide this button entirely.
 const PAYMENT_LINK_CLICK = '';
 
 export const GiftSection: React.FC = () => {
@@ -63,7 +63,7 @@ export const GiftSection: React.FC = () => {
     >
       <img
         src={GIFT_IMG}
-        alt="Alyorbekdan Madinaxonga sovg'a"
+        alt="Sevgilingdan Sevgilimga sovg'a"
         style={{
           position: 'absolute', inset: 0,
           width: '100%', height: '100%',
@@ -188,7 +188,7 @@ export const GiftSection: React.FC = () => {
               margin: '8px 0 0',
               textShadow: '0 0 20px rgba(201,169,110,0.4)',
             }}>
-              Seni sevaman. — Alyorbek
+              Seni sevaman. — Sevgiling
             </p>
           </motion.div>
         )}

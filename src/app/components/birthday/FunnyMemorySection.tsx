@@ -40,7 +40,7 @@ export const FunnyMemorySection: React.FC = () => {
     >
       <img
         src={FUNNY_MEMORY_IMG}
-        alt="Alyorbek va Madinaxonning kulgili xotirasi"
+        alt="Sevgiling va Sevgilimning kulgili xotirasi"
         style={{
           position: 'absolute', inset: 0,
           width: '100%', height: '100%',

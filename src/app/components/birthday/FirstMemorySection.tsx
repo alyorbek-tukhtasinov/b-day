@@ -40,7 +40,7 @@ export const FirstMemorySection: React.FC = () => {
     >
       <img
         src={FIRST_MEMORY_IMG}
-        alt="Alyorbek va Madinaxonning birinchi kunlaridan xotira"
+        alt="Sevgiling va Sevgilimning birinchi kunlaridan xotira"
         style={{
           position: 'absolute', inset: 0,
           width: '100%', height: '100%',

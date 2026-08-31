@@ -8,7 +8,7 @@ const GOLD = '#C9A96E';
 const CREAM = '#F8F0E3';
 
 // --- iPhone jamg'armasi sozlamalari ---
-// TODO(Alyorbek): pul qo'shganingizda shu ikkita qiymatni yangilab turing.
+// TODO(Sevgiling): pul qo'shganingizda shu ikkita qiymatni yangilab turing.
 const GOAL_USD = 500;
 const CONTRIBUTED_UZS = 500_000;
 // Taxminiy kurs (2026-yil iyul holatiga ko'ra ~12 000 so'm/$) — vaqti-vaqti bilan yangilang.
@@ -205,7 +205,7 @@ export const GiftSection: React.FC = () => {
     >
       <img
         src={GIFT_IMG}
-        alt="Alyorbekdan Madinaxonga sovg'a"
+        alt="Sevgilingdan Sevgilimga sovg'a"
         style={bgImgStyle}
       />
       <div style={overlayStyle} />
@@ -303,7 +303,7 @@ export const GiftSection: React.FC = () => {
             </p>
 
             <p style={signatureStyle}>
-              Seni sevaman. — Alyorbek
+              Seni sevaman. — Sevgiling
             </p>
           </motion.div>
         )}
