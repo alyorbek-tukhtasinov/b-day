@@ -1,313 +1,186 @@
-import React, { useRef, useState } from 'react';
-import { motion, useInView, useReducedMotion } from 'motion/react';
+import React, { useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import confetti from 'canvas-confetti';
-
-const GIFT_IMG = '/rasmlar/7.jpg';
-const INK = '#3A2418';
-const GOLD = '#C9A96E';
-const CREAM = '#F8F0E3';
+import { EASE, Eyebrow, Heading, Ornament, Reveal, Section, Signature, scrollToSection } from './primitives';
 
 // --- iPhone jamg'armasi sozlamalari ---
 // TODO(Sevgiling): pul qo'shganingizda shu ikkita qiymatni yangilab turing.
 const GOAL_USD = 500;
 const CONTRIBUTED_UZS = 500_000;
-// Taxminiy kurs (2026-yil iyul holatiga ko'ra ~12 000 so'm/$) — vaqti-vaqti bilan yangilang.
+// Taxminiy kurs (~12 000 so'm/$) — vaqti-vaqti bilan yangilang.
 const USD_TO_UZS_RATE = 12000;
 
 const contributedUSD = CONTRIBUTED_UZS / USD_TO_UZS_RATE;
 const progressPercent = Math.min(100, Math.round((contributedUSD / GOAL_USD) * 1000) / 10);
-const displayUSD = contributedUSD.toFixed(1);
 
-const COINS = [
-  { x: -22, delay: 0.05, size: 12 },
-  { x: 12, delay: 0.16, size: 10 },
-  { x: -6, delay: 0.3, size: 13 },
-  { x: 24, delay: 0.44, size: 9 },
-  { x: -15, delay: 0.58, size: 11 },
-  { x: 5, delay: 0.72, size: 12 },
-];
+const formatUZS = (n: number) => new Intl.NumberFormat('uz-UZ').format(n).replace(/,/g, ' ');
 
-const sectionStyle: React.CSSProperties = {
-  height: '100dvh',
-  scrollSnapAlign: 'start',
-  scrollSnapStop: 'always',
-  position: 'relative',
-  overflow: 'hidden',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'center',
-};
+const Bow: React.FC = () => (
+  <svg width="72" height="34" viewBox="0 0 72 34" fill="none" aria-hidden>
+    <defs>
+      <linearGradient id="bow" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#EAD7AE" />
+        <stop offset="1" stopColor="#A9824A" />
+      </linearGradient>
+    </defs>
+    <path d="M36 26C28 8 8 2 6 14c-1.6 9.6 16 13 30 12Z" fill="url(#bow)" />
+    <path d="M36 26C44 8 64 2 66 14c1.6 9.6-16 13-30 12Z" fill="url(#bow)" />
+    <path d="M36 26C31 16 18 11 15 16" stroke="#7E5E2E" strokeOpacity=".5" strokeWidth="1" />
+    <path d="M36 26C41 16 54 11 57 16" stroke="#7E5E2E" strokeOpacity=".5" strokeWidth="1" />
+    <rect x="31" y="20" width="10" height="12" rx="3" fill="#C9A96E" />
+  </svg>
+);
 
-const bgImgStyle: React.CSSProperties = {
-  position: 'absolute', inset: 0,
-  width: '100%', height: '100%',
-  objectFit: 'cover',
-  filter: 'saturate(0.5) brightness(0.2) blur(4px)',
-  transform: 'scale(1.08)',
-};
+const GiftBox: React.FC<{ opening: boolean; onOpen: () => void; onOpened: () => void }> = ({
+  opening,
+  onOpen,
+  onOpened,
+}) => (
+  <motion.button
+    type="button"
+    onClick={onOpen}
+    disabled={opening}
+    aria-label="Sovg‘a qutisini ochish"
+    whileHover={opening ? undefined : { y: -4 }}
+    whileTap={opening ? undefined : { scale: 0.97 }}
+    className="group relative h-44 w-48 [perspective:800px]"
+  >
+    {/* soft floor shadow */}
+    <span aria-hidden className="absolute -bottom-3 left-1/2 h-4 w-40 -translate-x-1/2 rounded-full bg-black/60 blur-md" />
 
-const overlayStyle: React.CSSProperties = {
-  position: 'absolute', inset: 0,
-  background: 'linear-gradient(180deg, rgba(5,1,3,0.6) 0%, rgba(8,2,5,0.45) 35%, rgba(12,3,7,0.7) 70%, rgba(5,1,3,0.94) 100%)',
-};
+    {/* box body */}
+    <span className="absolute inset-x-3 bottom-0 h-28 overflow-hidden rounded-b-md bg-gradient-to-b from-[#f3e7d2] to-[#d9c5a2] shadow-[inset_0_-12px_24px_rgba(120,90,50,0.25)]">
+      <span className="absolute inset-y-0 left-1/2 w-6 -translate-x-1/2 bg-gradient-to-b from-gold-light to-gold-deep" />
+    </span>
 
-const titleStyle: React.CSSProperties = {
-  fontFamily: 'Cormorant Garamond, serif',
-  fontSize: 'clamp(24px,7vw,32px)',
-  fontWeight: 400, fontStyle: 'italic',
-  color: '#F8F0E3', margin: 0,
-  textShadow: '0 0 40px rgba(201,169,110,0.2)',
-  textAlign: 'center',
-};
+    {/* lid */}
+    <motion.span
+      className="absolute inset-x-0 top-8 block h-10 origin-bottom-left"
+      animate={opening ? { y: -70, x: 30, rotate: 24, opacity: 0 } : { y: 0, x: 0, rotate: 0, opacity: 1 }}
+      transition={{ duration: 0.9, ease: EASE }}
+      onAnimationComplete={() => opening && onOpened()}
+    >
+      <span className="absolute inset-0 rounded-md bg-gradient-to-b from-[#f8eedd] to-[#e2cfad] shadow-[0_8px_16px_-6px_rgba(0,0,0,0.5)]">
+        <span className="absolute inset-y-0 left-1/2 w-6 -translate-x-1/2 bg-gradient-to-b from-gold-light to-gold" />
+      </span>
+      <span className="absolute -top-7 left-1/2 -translate-x-1/2">
+        <Bow />
+      </span>
+    </motion.span>
+  </motion.button>
+);
 
-const boxBaseStyle: React.CSSProperties = {
-  position: 'absolute', left: 0, right: 0, bottom: 0,
-  height: '110px',
-  borderRadius: '6px 6px 12px 12px',
-  background: CREAM,
-  boxShadow: '0 22px 45px rgba(0,0,0,0.55)',
-  display: 'flex', alignItems: 'flex-end', justifyContent: 'center',
-  paddingBottom: '16px',
-  zIndex: 1,
-};
+const FundCard: React.FC = () => {
+  const reduceMotion = useReducedMotion();
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.9, ease: EASE }}
+      className="w-full max-w-[330px] rounded-lg border border-gold/25 bg-ink-soft/70 p-6 text-left shadow-[0_30px_60px_-25px_rgba(0,0,0,0.9)] backdrop-blur-md"
+    >
+      <Eyebrow className="text-[10px]">iPhone jamg‘armasi</Eyebrow>
 
-const ribbonStyle: React.CSSProperties = {
-  position: 'absolute', top: 0, bottom: 0, left: '50%',
-  transform: 'translateX(-50%)',
-  width: '10px',
-  background: 'rgba(201,169,110,0.55)',
-  zIndex: 2,
-};
+      <div className="mt-4 flex items-baseline gap-2">
+        <span className="font-display text-[44px] leading-none font-light text-cream lining-nums">${contributedUSD.toFixed(1)}</span>
+        <span className="font-sans text-sm text-cream/45">/ ${GOAL_USD}</span>
+      </div>
+      <p className="mt-1 font-sans text-xs text-cream/45">{formatUZS(CONTRIBUTED_UZS)} so‘m yig‘ildi</p>
 
-const lidStyle: React.CSSProperties = {
-  position: 'absolute', left: 0, right: 0, top: 0,
-  height: '52px',
-  borderRadius: '10px 10px 4px 4px',
-  background: 'linear-gradient(160deg, #E3C793, #B98F52)',
-  boxShadow: '0 10px 20px rgba(0,0,0,0.35)',
-  transformOrigin: 'bottom center',
-  display: 'flex', alignItems: 'center', justifyContent: 'center',
-  zIndex: 3,
-};
+      <div
+        className="mt-5 h-1 w-full overflow-hidden rounded-full bg-cream/10"
+        role="progressbar"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={progressPercent}
+        aria-label="Jamg‘arma holati"
+      >
+        <motion.div
+          className="h-full rounded-full bg-gradient-to-r from-gold-deep via-gold to-gold-light"
+          initial={{ width: 0 }}
+          animate={{ width: `${Math.max(progressPercent, 2)}%` }}
+          transition={{ duration: reduceMotion ? 0 : 1.4, delay: 0.5, ease: EASE }}
+        />
+      </div>
+      <div className="mt-2 flex justify-between font-sans text-[11px] text-cream/50">
+        <span>{progressPercent}%</span>
+        <span>Maqsad: ${GOAL_USD}</span>
+      </div>
 
-const jarWrapStyle: React.CSSProperties = {
-  display: 'flex', flexDirection: 'column', alignItems: 'center',
-};
-
-const jarLidStyle: React.CSSProperties = {
-  width: '54px', height: '10px', borderRadius: '4px',
-  background: 'linear-gradient(160deg, #E3C793, #B98F52)',
-  boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
-};
-
-const jarNeckStyle: React.CSSProperties = {
-  width: '42px', height: '12px',
-  borderLeft: `2px solid ${GOLD}`, borderRight: `2px solid ${GOLD}`,
-  background: 'rgba(255,255,255,0.05)',
-  marginTop: '-2px',
-};
-
-const jarBodyStyle: React.CSSProperties = {
-  width: '96px', height: '108px',
-  border: `2px solid ${GOLD}`,
-  borderRadius: '8px 8px 34px 34px',
-  background: 'rgba(255,255,255,0.05)',
-  position: 'relative',
-  overflow: 'hidden',
-  marginTop: '-2px',
-};
-
-const coinFillStyle: React.CSSProperties = {
-  position: 'absolute', left: 0, right: 0, bottom: 0,
-  background: 'linear-gradient(180deg, #F0DDB0, #C9A96E 55%, #96702F)',
-  borderTop: '1px solid rgba(255,255,255,0.5)',
-};
-
-const coinBaseStyle: React.CSSProperties = {
-  position: 'absolute', top: '-14px',
-  borderRadius: '50%',
-  background: 'radial-gradient(circle at 35% 30%, #F8E7B8, #C9A96E 60%, #8C6A34)',
-  boxShadow: '0 1px 2px rgba(0,0,0,0.4)',
-};
-
-const progressTrackStyle: React.CSSProperties = {
-  width: '100%', height: '8px', borderRadius: '8px',
-  background: 'rgba(255,255,255,0.12)',
-  border: '1px solid rgba(201,169,110,0.3)',
-  overflow: 'hidden',
-};
-
-const progressFillStyle: React.CSSProperties = {
-  height: '100%', borderRadius: '8px',
-  background: 'linear-gradient(90deg, #C9A96E, #F0DDB0)',
-};
-
-const progressLabelStyle: React.CSSProperties = {
-  marginTop: '6px',
-  fontFamily: 'Montserrat, sans-serif',
-  fontSize: '11px', fontWeight: 500, letterSpacing: '0.04em',
-  color: 'rgba(245,240,227,0.75)',
-  textAlign: 'center',
-};
-
-const fundTextStyle: React.CSSProperties = {
-  fontFamily: 'Cormorant Garamond, serif', fontStyle: 'italic',
-  fontSize: '18px', color: CREAM, margin: 0, textAlign: 'center',
-};
-
-const fundSubTextStyle: React.CSSProperties = {
-  fontFamily: 'Montserrat, sans-serif',
-  fontSize: '12px', fontWeight: 300,
-  color: 'rgba(245,240,227,0.65)',
-  margin: 0, lineHeight: 1.6, textAlign: 'center',
-  maxWidth: '260px',
-};
-
-const signatureStyle: React.CSSProperties = {
-  fontFamily: 'Dancing Script, cursive',
-  fontSize: '22px',
-  color: GOLD,
-  margin: '4px 0 0',
-  textShadow: '0 0 20px rgba(201,169,110,0.4)',
+      <p className="mt-5 border-t border-gold/15 pt-5 font-display text-[17px] leading-[1.55] text-cream/80 italic">
+        Bu — men boshlagan jamg‘arma. Sen hech narsa qilishing shart emas, qolganini o‘zim yig‘aman.
+      </p>
+    </motion.div>
+  );
 };
 
 export const GiftSection: React.FC = () => {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { amount: 0.3 });
-  const [revealed, setRevealed] = useState(false);
-  const reduceMotion = useReducedMotion();
+  const [opening, setOpening] = useState(false);
+  const [opened, setOpened] = useState(false);
 
   const openGift = () => {
-    if (revealed) return; // box only opens once — a second tap shouldn't refire the confetti
-    setRevealed(true);
-    confetti({
-      particleCount: 140,
-      spread: 75,
-      origin: { y: 0.55 },
-      colors: [GOLD, CREAM, '#E8B4B8'],
-    });
+    if (opening) return;
+    setOpening(true);
+    const colors = ['#C9A96E', '#EAD7AE', '#F5ECDD', '#E0ADB2'];
+    const shared = { particleCount: 70, spread: 60, startVelocity: 45, colors, disableForReducedMotion: true };
+    setTimeout(() => {
+      confetti({ ...shared, angle: 60, origin: { x: 0, y: 0.7 } });
+      confetti({ ...shared, angle: 120, origin: { x: 1, y: 0.7 } });
+    }, 350);
   };
 
-  const fadeUp = (delay: number) => ({
-    initial: { opacity: 0, y: 20 },
-    animate: isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 },
-    transition: { duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
-  });
-
-  const lidDuration = reduceMotion ? 0.3 : 0.8;
-  const coinDuration = reduceMotion ? 0.2 : 0.6;
-
   return (
-    <section
-      ref={ref}
-      style={sectionStyle}
-    >
-      <img
-        src={GIFT_IMG}
-        alt="Sevgilingdan Sevgilimga sovg'a"
-        style={bgImgStyle}
-      />
-      <div style={overlayStyle} />
+    <Section image="/rasmlar/7.jpg" label="Sovg‘a" className="gap-6">
+      <Reveal className="flex flex-col items-center gap-3">
+        <Eyebrow>
+          <span className="text-gold-light">VI</span>
+          <span aria-hidden className="mx-2 text-gold/50">—</span>
+          Sovg‘a
+        </Eyebrow>
+        <Heading>{opened ? 'Tug‘ilgan kuning muborak' : 'Sovg‘ang tayyor'}</Heading>
+      </Reveal>
 
-      <div style={{ position: 'relative', zIndex: 5, width: '100%', maxWidth: '340px', padding: '0 28px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
-
-        <motion.h2 {...fadeUp(0)} style={titleStyle}>
-          {`Sovg‘ang tayyor 🎁`}
-        </motion.h2>
-
-        {/* 3D gift box */}
-        <motion.div {...fadeUp(0.15)} style={{ width: '190px' }}>
-          <div style={{ position: 'relative', width: '100%', height: '150px', perspective: '1000px' }}>
+      <div className="flex min-h-[300px] w-full flex-col items-center justify-center">
+        <AnimatePresence mode="wait">
+          {!opened ? (
             <motion.div
-              onClick={openGift}
-              role="button"
-              tabIndex={0}
-              aria-label="Sovg'a qutisini ochish"
-              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') openGift(); }}
-              whileTap={!revealed ? { scale: 0.97 } : undefined}
-              style={{ position: 'relative', width: '100%', height: '100%', cursor: revealed ? 'default' : 'pointer' }}
+              key="box"
+              exit={{ opacity: 0, scale: 0.9 }}
+              transition={{ duration: 0.4, ease: EASE }}
+              className="flex flex-col items-center gap-8"
             >
-              {/* Base */}
-              <div style={boxBaseStyle}>
-                <div style={ribbonStyle} />
-                {!revealed && (
-                  <p style={{ fontFamily: 'Dancing Script, cursive', fontSize: '16px', color: INK, margin: 0, textAlign: 'center', position: 'relative', zIndex: 3 }}>
-                    Ochish uchun bos
-                  </p>
-                )}
-              </div>
-
-              {/* Lid */}
-              <motion.div
-                style={lidStyle}
-                animate={{ rotateX: revealed ? -125 : 0 }}
-                transition={{ duration: lidDuration, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <span style={{ fontSize: '20px' }}>🎀</span>
-              </motion.div>
+              <Reveal delay={0.15}>
+                <GiftBox opening={opening} onOpen={openGift} onOpened={() => setOpened(true)} />
+              </Reveal>
+              <Reveal delay={0.3}>
+                <p className="font-sans text-[11px] font-medium tracking-[0.3em] text-cream/55 uppercase">
+                  Ochish uchun bosing
+                </p>
+              </Reveal>
             </motion.div>
-          </div>
-        </motion.div>
-
-        {revealed && (
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.35 }}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px', width: '100%' }}
-          >
-            {/* Jar with falling coins */}
-            <div style={jarWrapStyle}>
-              <div style={jarLidStyle} />
-              <div style={jarNeckStyle} />
-              <div style={jarBodyStyle}>
-                <motion.div
-                  style={coinFillStyle}
-                  initial={{ height: 0 }}
-                  animate={{ height: `${progressPercent}%` }}
-                  transition={{ duration: coinDuration * 1.4, delay: 0.5, ease: 'easeOut' }}
-                />
-                {!reduceMotion && COINS.map((c, i) => (
-                  <motion.div
-                    key={i}
-                    style={{ ...coinBaseStyle, width: c.size, height: c.size, left: `calc(50% + ${c.x}px)` }}
-                    initial={{ y: -70, opacity: 0, rotate: 0 }}
-                    animate={{ y: 60, opacity: [0, 1, 1, 0], rotate: 180 }}
-                    transition={{ duration: coinDuration, delay: 0.6 + c.delay, ease: 'easeIn' }}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Progress bar */}
-            <div style={{ width: '100%', maxWidth: '220px' }}>
-              <div style={progressTrackStyle}>
-                <motion.div
-                  style={progressFillStyle}
-                  initial={{ width: 0 }}
-                  animate={{ width: `${progressPercent}%` }}
-                  transition={{ duration: 1, delay: 1.3, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
-                />
-              </div>
-              <div style={progressLabelStyle}>
-                ${displayUSD} / ${GOAL_USD} · {progressPercent}%
-              </div>
-            </div>
-
-            <p style={fundTextStyle}>
-              {`iPhone jamg‘armasi boshlandi 📱`}
-            </p>
-            <p style={fundSubTextStyle}>
-              {`Bu — men boshlagan jamg‘arma. Sen hech narsa qilishing shart emas, qolganini o‘zim yig‘aman 💛`}
-            </p>
-
-            <p style={signatureStyle}>
-              Seni sevaman. — Sevgiling
-            </p>
-          </motion.div>
-        )}
+          ) : (
+            <FundCard key="card" />
+          )}
+        </AnimatePresence>
       </div>
-    </section>
+
+      <Reveal delay={0.2} className="flex flex-col items-center gap-4">
+        <Ornament />
+        <Signature>Seni sevaman — Sevgiling</Signature>
+      </Reveal>
+
+      {opened && (
+        <motion.button
+          type="button"
+          onClick={() => scrollToSection(0)}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.6 }}
+          className="font-sans text-[10px] font-medium tracking-[0.3em] text-gold/60 uppercase transition-colors hover:text-gold"
+        >
+          ↑ Boshiga qaytish
+        </motion.button>
+      )}
+    </Section>
   );
 };

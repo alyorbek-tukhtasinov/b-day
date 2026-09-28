@@ -1,7 +1,12 @@
 {
-  "description": "Streamline task management and collaboration for teams, enhancing productivity with intuitive tools for organizing, tracking, and completing projects.",
+  "title": "Sevgilim — Tug‘ilgan kuning muborak",
+  "description": "Sevgilim uchun maxsus tayyorlangan tug‘ilgan kun kundaligi.",
+  "language": "uz",
   "robots": {
     "index": false
+  },
+  "icons": {
+    "icon": "/favicon.svg"
   },
   "accessibility": {
     "addBypassLinks": false,

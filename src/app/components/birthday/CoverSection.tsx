@@ -1,200 +1,100 @@
-import React, { useMemo, useRef } from 'react';
-import { motion, useInView } from 'motion/react';
+import React from 'react';
+import { motion, useReducedMotion } from 'motion/react';
+import { EASE, Eyebrow, FramedPhoto, Ornament, Reveal, Section, Signature, scrollToSection } from './primitives';
 
 const COVER_IMG = '/rasmlar/1.jpg';
 
-interface Petal {
-  id: number;
-  x: number;
-  size: number;
-  duration: number;
-  delay: number;
-  rotation: number;
-  color: string;
-}
+// Deterministic "random" so particles don't jump between renders.
+const DUST = Array.from({ length: 16 }, (_, i) => {
+  const r = (n: number) => ((Math.sin(i * 97.13 + n * 13.7) + 1) / 2);
+  return {
+    left: r(1) * 100,
+    top: 20 + r(2) * 75,
+    size: 1.5 + r(3) * 2.5,
+    duration: 9 + r(4) * 8,
+    delay: r(5) * 6,
+  };
+});
 
-const PETAL_COLORS = [
-  'rgba(220,160,170,0.7)',
-  'rgba(232,180,184,0.6)',
-  'rgba(201,169,110,0.5)',
-  'rgba(245,210,215,0.6)',
-  'rgba(255,200,210,0.5)',
-];
-
-export const CoverSection: React.FC = () => {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { amount: 0.3 });
-
-  const petals = useMemo<Petal[]>(() =>
-    Array.from({ length: 18 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      size: Math.random() * 10 + 6,
-      duration: Math.random() * 8 + 10,
-      delay: Math.random() * 10,
-      rotation: Math.random() * 360,
-      color: PETAL_COLORS[Math.floor(Math.random() * PETAL_COLORS.length)],
-    })), []);
-
-  const fadeUp = (delay: number) => ({
-    initial: { opacity: 0, y: 24 },
-    animate: isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 },
-    transition: { duration: 0.9, delay, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
-  });
-
+const GoldDust: React.FC = () => {
+  const reduceMotion = useReducedMotion();
+  if (reduceMotion) return null;
   return (
-    <section
-      ref={ref}
-      style={{
-        height: '100dvh',
-        scrollSnapAlign: 'start',
-        scrollSnapStop: 'always',
-        position: 'relative',
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      {/* Background photo */}
-      <img
-        src={COVER_IMG}
-        alt="Sevgiling va Sevgilimning birgalikdagi surati"
-        style={{
-          position: 'absolute', inset: 0,
-          width: '100%', height: '100%',
-          objectFit: 'cover',
-          filter: 'saturate(0.75) brightness(0.55)',
-        }}
-      />
-      {/* Standard overlays */}
-      <div style={{
-        position: 'absolute', inset: 0,
-        background: 'linear-gradient(180deg, rgba(5,1,3,0.55) 0%, rgba(8,2,5,0.4) 35%, rgba(12,3,7,0.65) 70%, rgba(5,1,3,0.92) 100%)',
-      }} />
-      <div style={{
-        position: 'absolute', inset: 0,
-        background: 'radial-gradient(ellipse at center, transparent 30%, rgba(5,1,3,0.5) 100%)',
-      }} />
-
-      {/* Ambient glow orbs */}
-      <div style={{
-        position: 'absolute', top: '15%', left: '10%',
-        width: '200px', height: '200px',
-        background: 'radial-gradient(circle, rgba(201,169,110,0.12) 0%, transparent 70%)',
-        borderRadius: '50%', filter: 'blur(30px)',
-      }} />
-      <div style={{
-        position: 'absolute', bottom: '20%', right: '5%',
-        width: '160px', height: '160px',
-        background: 'radial-gradient(circle, rgba(220,160,170,0.1) 0%, transparent 70%)',
-        borderRadius: '50%', filter: 'blur(25px)',
-      }} />
-
-      {/* Falling petals */}
-      {petals.map((p) => (
-        <motion.div
-          key={p.id}
-          style={{
-            position: 'absolute',
-            left: `${p.x}%`,
-            top: '-20px',
-            width: p.size,
-            height: p.size * 1.4,
-            borderRadius: '50% 0 50% 0',
-            background: p.color,
-            zIndex: 3,
-          }}
-          animate={{
-            y: ['0vh', '110vh'],
-            rotate: [p.rotation, p.rotation + 360],
-            x: [0, Math.sin(p.id) * 40],
-          }}
-          transition={{
-            duration: p.duration,
-            delay: p.delay,
-            repeat: Infinity,
-            ease: 'linear',
-          }}
+    <div aria-hidden className="pointer-events-none absolute inset-0 z-[1]">
+      {DUST.map((d, i) => (
+        <motion.span
+          key={i}
+          className="absolute rounded-full bg-gold-light shadow-[0_0_8px_2px_rgba(234,215,174,0.45)]"
+          style={{ left: `${d.left}%`, top: `${d.top}%`, width: d.size, height: d.size }}
+          animate={{ y: [0, -120], opacity: [0, 0.9, 0] }}
+          transition={{ duration: d.duration, delay: d.delay, repeat: Infinity, ease: 'easeOut' }}
         />
       ))}
-
-      {/* Content */}
-      <div style={{ position: 'relative', zIndex: 5, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '0 28px', paddingTop: '140px', gap: '14px' }}>
-        <motion.p {...fadeUp(0)} style={{
-          fontFamily: 'Montserrat, sans-serif',
-          fontSize: '10px', fontWeight: 300,
-          color: '#C9A96E', letterSpacing: '0.25em',
-          textTransform: 'uppercase', margin: 0,
-        }}>
-          ♡ 29 FEVRAL ♡
-        </motion.p>
-
-        <motion.h1 {...fadeUp(0.15)} style={{
-          fontFamily: 'Cormorant Garamond, serif',
-          fontSize: 'clamp(52px,16vw,72px)',
-          fontWeight: 300, fontStyle: 'italic',
-          color: '#F8F0E3', margin: 0, lineHeight: 1.1,
-          textShadow: '0 0 60px rgba(201,169,110,0.3), 0 0 120px rgba(201,169,110,0.15)',
-        }}>
-          Sevgilim
-        </motion.h1>
-
-        <motion.div {...fadeUp(0.3)} style={{
-          display: 'inline-flex', alignItems: 'center',
-          padding: '6px 18px', borderRadius: '999px',
-          border: '1px solid rgba(201,169,110,0.4)',
-          background: 'rgba(201,169,110,0.1)',
-          boxShadow: '0 0 20px rgba(201,169,110,0.15)',
-        }}>
-          <span style={{
-            fontFamily: 'Montserrat, sans-serif',
-            fontSize: '11px', fontWeight: 500,
-            letterSpacing: '0.15em', textTransform: 'uppercase',
-            color: '#C9A96E',
-          }}>18 BAHORNI QARSHI OLGAN FARISHTAM</span>
-        </motion.div>
-
-        {/* Divider */}
-        <motion.div {...fadeUp(0.45)} style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%', maxWidth: '260px' }}>
-          <div style={{ flex: 1, height: '1px', background: 'linear-gradient(to right, transparent, rgba(201,169,110,0.6))' }} />
-          <span style={{ color: '#C9A96E', fontSize: '14px' }}>✦</span>
-          <div style={{ flex: 1, height: '1px', background: 'linear-gradient(to left, transparent, rgba(201,169,110,0.6))' }} />
-        </motion.div>
-
-        <motion.p {...fadeUp(0.6)} style={{
-          fontFamily: 'Cormorant Garamond, serif',
-          fontSize: 'clamp(16px,5vw,20px)',
-          fontStyle: 'italic',
-          color: 'rgba(245,240,227,0.85)',
-          margin: 0, lineHeight: 1.6, maxWidth: '320px',
-        }}>
-          {`Dunyoga kelgan kuning muborak bo‘lsin, ko‘zimning nuri, qalbimning quyoshi.`}
-        </motion.p>
-
-        <motion.p {...fadeUp(0.75)} style={{
-          fontFamily: 'Dancing Script, cursive',
-          fontSize: '22px',
-          color: '#C9A96E',
-          margin: '8px 0 0',
-          textShadow: '0 0 20px rgba(201,169,110,0.4)',
-        }}>
-          Har bir soniya seni o‘ylaguvchi — Sevgilingdan
-        </motion.p>
-      </div>
-
-      {/* Scroll hint */}
-      <motion.div
-        style={{ position: 'absolute', bottom: '32px', zIndex: 5, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}
-        animate={{ y: [0, 6, 0] }}
-        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-      >
-        <span style={{ fontFamily: 'Montserrat, sans-serif', fontSize: '9px', letterSpacing: '0.2em', color: 'rgba(201,169,110,0.6)', textTransform: 'uppercase' }}>Pastga suring</span>
-        <svg width="14" height="9" viewBox="0 0 14 9" fill="none">
-          <path d="M1 1L7 7L13 1" stroke="rgba(201,169,110,0.6)" strokeWidth="1.5" strokeLinecap="round" />
-        </svg>
-      </motion.div>
-    </section>
+    </div>
   );
 };
+
+export const CoverSection: React.FC = () => (
+  <Section
+    image={COVER_IMG}
+    label="Muqova"
+    className="gap-4 pb-16"
+    overlay={
+      <>
+        <GoldDust />
+        <motion.button
+          type="button"
+          onClick={() => scrollToSection(1)}
+          className="absolute bottom-[max(20px,env(safe-area-inset-bottom))] left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-2 text-gold/70 transition-colors hover:text-gold"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.4, duration: 1, ease: EASE }}
+          aria-label="Keyingi sahifaga o‘tish"
+        >
+          <span className="font-sans text-[10px] font-medium tracking-[0.35em] uppercase">Pastga suring</span>
+          <span className="relative block h-8 w-px overflow-hidden bg-gold/20">
+            <motion.span
+              className="absolute inset-x-0 top-0 h-3 bg-gold"
+              animate={{ y: [-12, 32] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+            />
+          </span>
+        </motion.button>
+      </>
+    }
+  >
+    <Reveal className="flex items-center gap-3">
+      <span aria-hidden className="h-px w-8 bg-gold/50" />
+      <Eyebrow>29 · Fevral</Eyebrow>
+      <span aria-hidden className="h-px w-8 bg-gold/50" />
+    </Reveal>
+
+    <Reveal delay={0.1} className="relative">
+      <FramedPhoto
+        src={COVER_IMG}
+        alt="Sevgiling va Sevgilimning birgalikdagi surati"
+        shape="arch"
+        eager
+        className="h-[clamp(190px,34dvh,360px)] aspect-[2/3]"
+      />
+    </Reveal>
+
+    <Reveal delay={0.25} className="flex flex-col items-center gap-2">
+      <h1 className="font-display text-[clamp(54px,16vw,76px)] leading-none font-light text-cream italic [text-shadow:0_4px_30px_rgba(10,4,6,0.9)]">
+        Sevgilim
+      </h1>
+      <Eyebrow className="text-gold-light/90">18 bahorni qarshi olgan farishtam</Eyebrow>
+    </Reveal>
+
+    <Reveal delay={0.4} className="flex w-full flex-col items-center gap-4">
+      <Ornament />
+      <p className="max-w-[320px] font-display text-[clamp(17px,4.6vw,20px)] leading-[1.55] text-cream/85 italic">
+        Dunyoga kelgan kuning muborak bo‘lsin, ko‘zimning nuri, qalbimning quyoshi.
+      </p>
+    </Reveal>
+
+    <Reveal delay={0.55}>
+      <Signature>Har soniya seni o‘ylaguvchi Sevgilingdan</Signature>
+    </Reveal>
+  </Section>
+);

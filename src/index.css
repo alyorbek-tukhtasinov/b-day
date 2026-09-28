@@ -1,2 +1,64 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Montserrat:wght@300;400;500&family=Dancing+Script:wght@400;600&display=swap');
 @import 'tailwindcss';
+
+@theme {
+  --color-ink: #0a0406;
+  --color-ink-soft: #150b0e;
+  --color-gold: #c9a96e;
+  --color-gold-light: #ead7ae;
+  --color-gold-deep: #94703b;
+  --color-cream: #f5ecdd;
+  --color-rose: #e0adb2;
+
+  --font-display: 'Cormorant Garamond', ui-serif, Georgia, serif;
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  --font-script: 'Pinyon Script', 'Cormorant Garamond', cursive;
+
+  --ease-luxe: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html,
+  body {
+    background: var(--color-ink);
+    color: var(--color-cream);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-gold) 40%, transparent);
+    color: var(--color-cream);
+  }
+
+  :focus-visible {
+    outline: 1px solid var(--color-gold);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Fine film grain laid over the whole page so flat gradients don't band. */
+@utility grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}

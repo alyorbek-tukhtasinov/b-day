@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { MusicPlayer } from './app/components/birthday/MusicPlayer';
+import React, { useEffect, useState } from 'react';
+import { AnimatePresence, MotionConfig } from 'motion/react';
 import { CoverSection } from './app/components/birthday/CoverSection';
 import { FirstMemorySection } from './app/components/birthday/FirstMemorySection';
 import { FunnyMemorySection } from './app/components/birthday/FunnyMemorySection';
@@ -7,96 +7,94 @@ import { GratitudeSection } from './app/components/birthday/GratitudeSection';
 import { JourneySection } from './app/components/birthday/JourneySection';
 import { WishesSection } from './app/components/birthday/WishesSection';
 import { GiftSection } from './app/components/birthday/GiftSection';
+import { IntroGate } from './app/components/birthday/IntroGate';
+import { MusicButton, useBackgroundMusic } from './app/components/birthday/MusicPlayer';
+import { SCROLL_CONTAINER_ID, scrollToSection } from './app/components/birthday/primitives';
+
+const SECTION_LABELS = ['Muqova', 'Birinchi lahza', 'Baxtli onlar', 'Minnatdorlik', 'Bizning yo‘limiz', 'Tilaklarim', 'Sovg‘a'];
 
 export default function App() {
+  const [opened, setOpened] = useState(false);
+  const music = useBackgroundMusic('/music.mp3');
+
+  const open = () => {
+    music.play();
+    setOpened(true);
+  };
+
   return (
-    <div
-      style={{
-        minHeight: '100dvh',
-        background: '#050102',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'stretch',
-      }}
-    >
-      <div
-        style={{
-          display: 'none',
-          position: 'fixed',
-          top: 0, left: 0, right: 0, bottom: 0,
-          background: 'radial-gradient(ellipse at center, #0d0408 0%, #030001 100%)',
-          zIndex: -1,
-        }}
-      />
+    <MotionConfig reducedMotion="user">
+      <div className="relative flex min-h-dvh justify-center bg-ink">
+        {/* Desktop surround: the page sits like a single card on a dark table. */}
+        <div aria-hidden className="fixed inset-0 hidden overflow-hidden md:block">
+          <img src="/rasmlar/1.jpg" alt="" className="h-full w-full scale-110 object-cover opacity-25 blur-3xl saturate-50" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,rgba(42,20,25,0.4)_0%,#0a0406_70%)]" />
+        </div>
 
-      <div
-        id="birthday-scroll"
-        style={{
-          width: '100%',
-          maxWidth: '430px',
-          height: '100dvh',
-          overflowY: 'scroll',
-          scrollSnapType: 'y mandatory',
-          scrollBehavior: 'smooth',
-          position: 'relative',
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-        } as React.CSSProperties}
-      >
-        <style>{`
-          #birthday-scroll::-webkit-scrollbar { display: none; }
-          * { box-sizing: border-box; }
-        `}</style>
+        <main className="relative h-dvh w-full max-w-[440px] overflow-hidden md:shadow-[0_0_120px_rgba(0,0,0,0.9)] md:ring-1 md:ring-gold/10">
+          <div
+            id={SCROLL_CONTAINER_ID}
+            className={`no-scrollbar h-full snap-y snap-mandatory scroll-smooth ${opened ? 'overflow-y-auto' : 'overflow-hidden'}`}
+          >
+            <CoverSection />
+            <FirstMemorySection />
+            <FunnyMemorySection />
+            <GratitudeSection />
+            <JourneySection />
+            <WishesSection />
+            <GiftSection />
+          </div>
 
-        <CoverSection />
-        <FirstMemorySection />
-        <FunnyMemorySection />
-        <GratitudeSection />
-        <JourneySection />
-        <WishesSection />
-        <GiftSection />
+          <div aria-hidden className="grain pointer-events-none absolute inset-0 z-40 opacity-[0.06] mix-blend-overlay" />
+
+          {opened && (
+            <>
+              <SectionProgress labels={SECTION_LABELS} />
+              <div className="pointer-events-none absolute right-4 bottom-[max(16px,env(safe-area-inset-bottom))] z-40">
+                <MusicButton playing={music.playing} onToggle={music.toggle} />
+              </div>
+            </>
+          )}
+
+          <AnimatePresence>{!opened && <IntroGate key="intro" onOpen={open} />}</AnimatePresence>
+        </main>
       </div>
-
-      <MusicPlayer />
-      <SectionProgress totalSections={7} />
-    </div>
+    </MotionConfig>
   );
 }
 
-const SectionProgress: React.FC<{ totalSections: number }> = ({ totalSections }) => {
-  const [activeIndex, setActiveIndex] = React.useState(0);
+const SectionProgress: React.FC<{ labels: string[] }> = ({ labels }) => {
+  const [active, setActive] = useState(0);
 
   useEffect(() => {
-    const container = document.getElementById('birthday-scroll');
+    const container = document.getElementById(SCROLL_CONTAINER_ID);
     if (!container) return;
     const onScroll = () => {
       const idx = Math.round(container.scrollTop / container.clientHeight);
-      setActiveIndex(Math.min(idx, totalSections - 1));
+      setActive(Math.min(Math.max(idx, 0), labels.length - 1));
     };
     container.addEventListener('scroll', onScroll, { passive: true });
     return () => container.removeEventListener('scroll', onScroll);
-  }, [totalSections]);
+  }, [labels.length]);
 
   return (
-    <div style={{ position: 'fixed', left: '12px', top: '50%', transform: 'translateY(-50%)', zIndex: 150, display: 'flex', flexDirection: 'column', gap: '8px' }}>
-      {Array.from({ length: totalSections }).map((_, i) => (
+    <nav aria-label="Sahifalar" className="absolute top-1/2 left-2 z-40 flex -translate-y-1/2 flex-col gap-1">
+      {labels.map((label, i) => (
         <button
-          key={i}
-          onClick={() => {
-            const container = document.getElementById('birthday-scroll');
-            container?.scrollTo({ top: i * container.clientHeight, behavior: 'smooth' });
-          }}
-          style={{
-            width: activeIndex === i ? '6px' : '4px',
-            height: activeIndex === i ? '20px' : '4px',
-            borderRadius: '3px',
-            background: activeIndex === i ? '#C9A96E' : 'rgba(201,169,110,0.3)',
-            border: 'none', padding: 0, cursor: 'pointer',
-            transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-            boxShadow: activeIndex === i ? '0 0 8px rgba(201,169,110,0.5)' : 'none',
-          }}
-        />
+          key={label}
+          type="button"
+          onClick={() => scrollToSection(i)}
+          aria-label={label}
+          aria-current={active === i ? 'page' : undefined}
+          className="group grid h-5 w-4 place-items-center"
+        >
+          <span
+            className={`block w-px rounded-full transition-all duration-500 ${
+              active === i ? 'h-5 bg-gold' : 'h-2 bg-gold/30 group-hover:bg-gold/60'
+            }`}
+          />
+        </button>
       ))}
-    </div>
+    </nav>
   );
 };
