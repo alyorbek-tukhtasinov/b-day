@@ -1,10 +1,12 @@
 {
-  "description": "Streamline task management and collaboration for teams, enhancing productivity with intuitive tools for organizing, tracking, and completing projects.",
+  "description": "Sevgan qizim uchun maxsus tayyorlangan tug‘ilgan kun tabrigi: xotiralarimiz, tilaklarim va sovg‘a.",
   "robots": {
     "index": false
   },
   "accessibility": {
     "addBypassLinks": false,
     "ignoreReducedMotion": false
-  }
+  },
+  "title": "Sevgilimga — tug‘ilgan kun tabrigi 🎂",
+  "language": "uz"
 }
